@@ -1,0 +1,368 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#35483b">
+<title>V60 Brew Lab</title>
+
+<style>
+:root {
+  --cream:#f4efe5;
+  --sand:#b7a184;
+  --coffee:#73543c;
+  --forest:#35483b;
+  --white:#fffdf8;
+}
+* {box-sizing:border-box}
+body {
+  margin:0;
+  background:var(--cream);
+  color:var(--forest);
+  font-family:Arial,sans-serif;
+}
+header {
+  background:var(--forest);
+  color:var(--cream);
+  padding:25px 20px;
+}
+header small {letter-spacing:3px}
+header h1 {margin:12px 0 5px;font-size:27px}
+header p {color:#d8d0c1;font-size:13px}
+main {padding:18px;max-width:650px;margin:auto}
+nav {
+  display:flex;gap:7px;overflow-x:auto;
+  padding:10px 0;margin-bottom:15px;
+}
+nav button {
+  flex-shrink:0;border:0;padding:11px 14px;
+  border-radius:20px;background:#e2d8c8;
+  color:var(--forest);font-weight:bold;
+}
+nav button.active {background:var(--forest);color:white}
+.card {
+  background:var(--white);padding:18px;
+  border-radius:16px;margin-bottom:15px;
+  box-shadow:0 3px 12px #44351a0c;
+}
+h2 {font-size:21px;margin-top:5px}
+h3 {font-size:16px}
+p {line-height:1.6}
+input,select,textarea {
+  display:block;width:100%;padding:13px;
+  margin:7px 0 15px;border:1px solid #d8cbb8;
+  border-radius:9px;background:white;font-size:16px;
+  color:var(--forest);
+}
+label {font-size:13px;font-weight:bold}
+.btn {
+  border:0;background:var(--forest);color:white;
+  padding:13px 18px;border-radius:9px;
+  font-weight:bold;font-size:14px;
+}
+.btn.secondary {background:#e6dccb;color:var(--forest)}
+.result {
+  background:#eae4d7;padding:15px;
+  border-radius:12px;margin-top:15px;
+}
+.big {font-size:32px;font-weight:bold}
+.hidden {display:none!important}
+.step {border-left:3px solid var(--sand);padding:4px 0 4px 14px;margin:15px 0}
+.recipe {border:1px solid #e5dccd;padding:13px;border-radius:12px;margin:10px 0}
+.recipe button {margin-top:8px}
+footer {text-align:center;color:#8c806f;font-size:12px;padding:25px}
+</style>
+</head>
+
+<body>
+<header>
+  <small>YOUR PERSONAL COFFEE LAB</small>
+  <h1>☕ V60 Brew Lab</h1>
+  <p>Explore. Brew. Taste. Repeat.</p>
+</header>
+
+<main>
+<nav>
+  <button class="active" onclick="showPage('home',this)">Home</button>
+  <button onclick="showPage('calculator',this)">Calculator</button>
+  <button onclick="showPage('guide',this)">Guide</button>
+  <button onclick="showPage('recipes',this)">Recipes</button>
+  <button onclick="showPage('journal',this)">Journal</button>
+  <button onclick="showPage('timer',this)">Timer</button>
+</nav>
+
+<section id="home">
+  <div class="card">
+    <small>WELCOME TO YOUR BREW LAB</small>
+    <h2>Selamat datang! ☕</h2>
+    <p>Setiap cangkir adalah eksperimen baru. Mari temukan seduhan terbaikmu.</p>
+  </div>
+  <div class="card">
+    <h3>Today's Brew</h3>
+    <div class="big">15 : 225</div>
+    <p>15 gram kopi · 225 gram air</p>
+    <p>Rasio 1:15 · Total waktu sekitar 2:30–3:00</p>
+    <button class="btn" onclick="showPage('calculator')">Mulai menyeduh</button>
+  </div>
+  <div class="card">
+    <h3>Laboratory Menu</h3>
+    <p>⚖️ Brew Calculator</p>
+    <p>📖 Brewing Guide</p>
+    <p>🌱 Coffee Recipes</p>
+    <p>📝 Brew Journal</p>
+    <p>⏱️ Brew Timer</p>
+  </div>
+</section>
+
+<section id="calculator" class="hidden">
+  <div class="card">
+    <h2>⚖️ Brew Calculator</h2>
+    <p>Hitung kebutuhan air berdasarkan berat kopi dan rasio.</p>
+    <label>Berat kopi (gram)</label>
+    <input type="number" id="coffee" value="15" min="1">
+    <label>Rasio kopi : air</label>
+    <select id="ratio">
+      <option value="14">1 : 14 (Strong)</option>
+      <option value="15" selected>1 : 15 (Balanced)</option>
+      <option value="16">1 : 16 (Light)</option>
+      <option value="17">1 : 17 (Lighter)</option>
+    </select>
+    <button class="btn" onclick="calculate()">Hitung resep</button>
+    <div class="result" id="calcResult">
+      <p>Total air</p>
+      <div class="big" id="water">225 g</div>
+      <p id="ratioText">Rasio 1:15</p>
+    </div>
+  </div>
+</section>
+
+<section id="guide" class="hidden">
+  <div class="card">
+    <h2>📖 Brewing Guide</h2>
+    <p>Resep dasar V60 untuk pemula.</p>
+    <div class="step">
+      <b>01 — Preparation</b>
+      <p>Siapkan 15 gram kopi, 225 gram air, V60, filter, dan server. Panaskan air sekitar 92–94°C.</p>
+    </div>
+    <div class="step">
+      <b>02 — Rinse</b>
+      <p>Basahi filter dengan air panas. Buang air bilasan dari server.</p>
+    </div>
+    <div class="step">
+      <b>03 — Bloom (0:00–0:40)</b>
+      <p>Tuang 45 gram air secara merata. Diamkan sekitar 40 detik.</p>
+    </div>
+    <div class="step">
+      <b>04 — First Pour (0:40–1:10)</b>
+      <p>Tuang perlahan hingga total air mencapai 135 gram.</p>
+    </div>
+    <div class="step">
+      <b>05 — Final Pour (1:10–1:50)</b>
+      <p>Tuang hingga total air mencapai 225 gram.</p>
+    </div>
+    <div class="step">
+      <b>06 — Drawdown</b>
+      <p>Tunggu hingga air selesai menetes. Target waktu total sekitar 2:30–3:00.</p>
+    </div>
+    <p><b>Tips:</b> Sesuaikan ukuran gilingan dan teknik pouring berdasarkan rasa hasil seduhan.</p>
+  </div>
+</section>
+
+<section id="recipes" class="hidden">
+  <div class="card">
+    <h2>🌱 Coffee Recipes</h2>
+    <p>Pilih resep untuk memulai eksperimen.</p>
+    <div class="recipe">
+      <h3>01. Balanced Daily</h3>
+      <p>Kopi 15 g · Air 225 g · Rasio 1:15</p>
+      <p>Karakter: seimbang dan cocok untuk harian.</p>
+      <button class="btn" onclick="useRecipe(15,15)">Gunakan resep</button>
+    </div>
+    <div class="recipe">
+      <h3>02. Sweet & Smooth</h3>
+      <p>Kopi 15 g · Air 240 g · Rasio 1:16</p>
+      <p>Karakter: lebih ringan dan lembut.</p>
+      <button class="btn" onclick="useRecipe(15,16)">Gunakan resep</button>
+    </div>
+    <div class="recipe">
+      <h3>03. Strong Cup</h3>
+      <p>Kopi 15 g · Air 210 g · Rasio 1:14</p>
+      <p>Karakter: lebih pekat dan intens.</p>
+      <button class="btn" onclick="useRecipe(15,14)">Gunakan resep</button>
+    </div>
+  </div>
+</section>
+
+<section id="journal" class="hidden">
+  <div class="card">
+    <h2>📝 Brew Journal</h2>
+    <p>Catat hasil eksperimen seduhanmu. Data disimpan di browser HP ini.</p>
+    <label>Nama kopi</label>
+    <input id="bean" placeholder="Contoh: Gayo Wine">
+    <label>Berat kopi (gram)</label>
+    <input id="jcoffee" type="number" value="15">
+    <label>Berat air (gram)</label>
+    <input id="jwater" type="number" value="225">
+    <label>Grind size</label>
+    <input id="grind" placeholder="Contoh: Medium">
+    <label>Rasa yang dihasilkan</label>
+    <textarea id="taste" rows="3" placeholder="Contoh: Sweet, fruity, clean..."></textarea>
+    <label>Rating (1–5)</label>
+    <select id="rating">
+      <option value="5">5 - Excellent</option>
+      <option value="4">4 - Good</option>
+      <option value="3">3 - Average</option>
+      <option value="2">2 - Needs improvement</option>
+      <option value="1">1 - Poor</option>
+    </select>
+    <button class="btn" onclick="saveJournal()">Simpan catatan</button>
+  </div>
+  <div class="card">
+    <h3>Riwayat Seduhan</h3>
+    <div id="journalList">Belum ada catatan.</div>
+  </div>
+</section>
+
+<section id="timer" class="hidden">
+  <div class="card" style="text-align:center">
+    <h2>⏱️ Brew Timer</h2>
+    <p>Gunakan timer untuk memantau proses seduh.</p>
+    <div class="big" id="clock">00:00</div>
+    <p id="timerStatus">Ready to brew</p>
+    <button class="btn" id="startBtn" onclick="startTimer()">Start</button>
+    <button class="btn secondary" onclick="pauseTimer()">Pause</button>
+    <button class="btn secondary" onclick="resetTimer()">Reset</button>
+  </div>
+</section>
+
+</main>
+
+<footer>V60 BREW LAB · BREW YOUR OWN DISCOVERY</footer>
+
+<script>
+function showPage(page,button) {
+  document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));
+  document.getElementById(page).classList.remove('hidden');
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  if(button) button.classList.add('active');
+  else document.querySelectorAll('nav button').forEach(b=>{
+    if(b.textContent.toLowerCase()===page) b.classList.add('active');
+  });
+}
+
+function calculate() {
+  const coffee=Number(document.getElementById('coffee').value);
+  const ratio=Number(document.getElementById('ratio').value);
+  if(coffee<=0 || !Number.isFinite(coffee)) {
+    alert('Masukkan berat kopi yang benar.');
+    return;
+  }
+  document.getElementById('water').textContent=Math.round(coffee*ratio)+' g';
+  document.getElementById('ratioText').textContent='Rasio 1:'+ratio;
+}
+
+function useRecipe(coffee,ratio) {
+  document.getElementById('coffee').value=coffee;
+  document.getElementById('ratio').value=ratio;
+  calculate();
+  showPage('calculator');
+}
+
+function getJournals() {
+  return JSON.parse(localStorage.getItem('v60journals')||'[]');
+}
+
+function saveJournal() {
+  const entry={
+    bean:document.getElementById('bean').value.trim(),
+    coffee:document.getElementById('jcoffee').value,
+    water:document.getElementById('jwater').value,
+    grind:document.getElementById('grind').value,
+    taste:document.getElementById('taste').value,
+    rating:document.getElementById('rating').value,
+    date:new Date().toLocaleDateString('id-ID')
+  };
+  if(!entry.bean) {
+    alert('Isi nama kopi terlebih dahulu.');
+    return;
+  }
+  const journals=getJournals();
+  journals.unshift(entry);
+  localStorage.setItem('v60journals',JSON.stringify(journals));
+  renderJournals();
+  alert('Catatan seduhan berhasil disimpan!');
+  document.getElementById('bean').value='';
+  document.getElementById('taste').value='';
+}
+
+function renderJournals() {
+  const journals=getJournals();
+  const list=document.getElementById('journalList');
+  if(!journals.length) {
+    list.textContent='Belum ada catatan.';
+    return;
+  }
+  list.innerHTML=journals.map((j,i)=>`
+    <div class="recipe">
+      <b>${escapeHTML(j.bean)}</b>
+      <p>${escapeHTML(j.date)} · ${escapeHTML(j.coffee)} g kopi / ${escapeHTML(j.water)} g air</p>
+      <p>Grind: ${escapeHTML(j.grind||'-')}</p>
+      <p>Rasa: ${escapeHTML(j.taste||'-')}</p>
+      <p>Rating: ${'★'.repeat(Number(j.rating))}</p>
+      <button class="btn secondary" onclick="deleteJournal(${i})">Hapus</button>
+    </div>
+  `).join('');
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g,c=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[c]);
+}
+
+function deleteJournal(index) {
+  if(!confirm('Hapus catatan ini?')) return;
+  const journals=getJournals();
+  journals.splice(index,1);
+  localStorage.setItem('v60journals',JSON.stringify(journals));
+  renderJournals();
+}
+
+let seconds=0;
+let interval=null;
+
+function updateClock() {
+  const m=String(Math.floor(seconds/60)).padStart(2,'0');
+  const s=String(seconds%60).padStart(2,'0');
+  document.getElementById('clock').textContent=m+':'+s;
+}
+
+function startTimer() {
+  if(interval!==null) return;
+  document.getElementById('timerStatus').textContent='Brewing in progress...';
+  interval=setInterval(()=>{
+    seconds++;
+    updateClock();
+  },1000);
+}
+
+function pauseTimer() {
+  clearInterval(interval);
+  interval=null;
+  document.getElementById('timerStatus').textContent='Timer paused';
+}
+
+function resetTimer() {
+  clearInterval(interval);
+  interval=null;
+  seconds=0;
+  updateClock();
+  document.getElementById('timerStatus').textContent='Ready to brew';
+}
+
+calculate();
+renderJournals();
+</script>
+</body>
+</html>
